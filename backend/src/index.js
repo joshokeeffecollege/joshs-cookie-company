@@ -17,6 +17,10 @@ app.get('/api/health', (req, res) => {
 // mount /api/users
 app.use('/api/users', usersRouter);
 
+const cookiesRouter = require('./routes/cookies');
+app.use('/api/cookies', cookiesRouter);
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Backend API listening on http://localhost:${PORT}`);

@@ -1,0 +1,36 @@
+:root {
+    --orange: #FF9500;
+}
+
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.orange {
+    color: var(--orange);
+}
+
+/* Override Bootstrap warning-like utilities */
+.bg-warning,
+.btn-warning,
+.badge.bg-warning {
+    background-color: var(--orange) !important;
+    border-color: var(--orange) !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-warning {
+    color: var(--orange) !important;
+    border-color: var(--orange) !important;
+}
+
+.btn-outline-warning:hover {
+    background-color: var(--orange) !important;
+    color: white !important;
+}
+
+.text-warning {
+    color: var(--orange) !important;
+}

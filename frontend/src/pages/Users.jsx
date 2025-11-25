@@ -7,7 +7,7 @@ function Users() {
 
     useEffect(() => {
         axiosClient
-            .get('http://localhost:5000/api/users') // goes via Vite proxy to backend
+            .get('http://localhost:5000/api/users')
             .then((res) => setUsers(res.data))
             .catch((err) => {
                 console.error(err);
