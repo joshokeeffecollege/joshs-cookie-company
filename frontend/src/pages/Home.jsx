@@ -1,10 +1,8 @@
 import {useEffect, useState} from "react";
-import axios from "axios";
+import axios from "../api/axiosClient.js";
 
 export default function Home() {
     const [cookies, setCookies] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     // Fetch cookies from your Express backend
     useEffect(() => {
@@ -12,12 +10,10 @@ export default function Home() {
             .get("http://localhost:5000/api/cookies")
             .then((res) => {
                 setCookies(res.data);
-                setLoading(false);
             })
             .catch((err) => {
                 console.error("Error fetching cookies", err);
                 setError("Unable to load cookies.");
-                setLoading(false);
             });
     }, []);
 
