@@ -91,13 +91,9 @@ export default function Cookies() {
                                         <span className="fw-bold">
                                             €{Number(cookie.price).toFixed(2)}
                                         </span>
-                                        <button
-                                            type="button"
-                                            className="btn btn-sm btn-warning"
-                                            disabled
-                                        >
+                                        <a href="" className="btn btn-sm btn-outline-warning">
                                             Add to cart
-                                        </button>
+                                        </a>
                                     </div>
                                 </div>
                             </div>

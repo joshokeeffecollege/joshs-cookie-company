@@ -36,11 +36,8 @@ export default function Home() {
                                 Crispy edges, chewy centres, baked to order. Josh&apos;s Cookie Company
                                 brings bakery-quality cookies straight to your door.
                             </p>
-                            <a href="/cookies" className="btn btn-warning btn-md me-3">
+                            <a href="/cookies" className="btn btn-outline-warning btn-md me-3">
                                 Shop cookies
-                            </a>
-                            <a href="/login" className="btn btn-outline-secondary btn-md">
-                                Sign in
                             </a>
                         </div>
 

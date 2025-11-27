@@ -1,24 +1,75 @@
-function Login() {
+import {useState} from "react";
+import axios from "../api/axiosClient.js";
+import {useNavigate} from "react-router-dom";
+
+export default function Login() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setMessage(null);
+
+        try {
+            const res = await axios.post("http://localhost:5000/api/login", {
+                email,
+                password,
+            });
+
+            // INSECURE - show message and log result
+            setMessage("Login successfull");
+            console.log("Login response: ", res.data);
+
+            // redirect user to account page
+            navigate("/account");
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
-        <section>
-            <h2>Login</h2>
-            <form>
-                <div>
-                    <label>
-                        Email
-                        <input type="email" name="email"/>
-                    </label>
+        <div className="py-5">
+            <div className="container-fluid px-5">
+                <div className="row justify-content-center">
+                    <div className="col-md-6 col-lg-3">
+                        <h1 className="h3 mb-3 text-center">Login</h1>
+                        <p className="text-muted text-center mb-4">
+                            Sign in to manage your orders and account.
+                        </p>
+
+                        <form onSubmit={handleSubmit} noValidate>
+                            <div className="mb-3">
+                                <label htmlFor="email" className="form-label">
+                                    Email address
+                                </label>
+                                <input type="email" id="email" className="form-control" value={email}
+                                       placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} required/>
+                            </div>
+
+                            <div className="mb-3">
+                                <label htmlFor="password" className="form-label">
+                                    Password
+                                </label>
+                                <input type="password" id="password" className="form-control" value={password}
+                                       onChange={(e) => setPassword(e.target.value)} required/>
+                            </div>
+
+                            <button type="submit" className="btn btn-outline-warning w100 mt-3 mx-auto">
+                                {loading ? "Logging in..." : "Login"}
+                            </button>
+                        </form>
+
+                        <p className="text-center text-muted mt-3 mb-0">
+                            Don't have an account?{" "}
+                            <a href="/register">Register here</a>
+                        </p>
+                    </div>
                 </div>
-                <div>
-                    <label>
-                        Password
-                        <input type="password" name="password"/>
-                    </label>
-                </div>
-                <button type="submit">Log in</button>
-            </form>
-        </section>
+            </div>
+        </div>
     );
 }
-
-export default Login;
