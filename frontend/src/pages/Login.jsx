@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [message, setMessage] = useState("");
 
     const navigate = useNavigate();
 
@@ -59,7 +60,7 @@ export default function Login() {
                             </div>
 
                             <button type="submit" className="btn btn-outline-warning w100 mt-3 mx-auto">
-                                {loading ? "Logging in..." : "Login"}
+                                Login
                             </button>
                         </form>
 
