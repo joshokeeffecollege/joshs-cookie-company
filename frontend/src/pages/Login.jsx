@@ -5,8 +5,6 @@ import {useNavigate} from "react-router-dom";
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
-    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
 
@@ -21,7 +19,6 @@ export default function Login() {
             });
 
             // INSECURE - show message and log result
-            setMessage("Login successfull");
             console.log("Login response: ", res.data);
 
             // save user to localStorage
