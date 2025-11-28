@@ -28,7 +28,6 @@ function App() {
                     <Route path="/login" element={<Login/>}/>
                     <Route path="/register" element={<Register/>}/>
                     <Route path="/account" element={<Account/>}/>
-                    <Route path="/debug/users" element={<Users/>}/> {/* Insecure debug page */}
                     <Route path="/reviews" element={<Reviews/>}/>
                 </Routes>
             </main>

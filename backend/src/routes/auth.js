@@ -25,15 +25,26 @@ router.post("/register", async (req, res) => {
     }
 });
 
-// INSECURE LOGIN: plaintext comparison
+// INSECURE LOGIN: vulnerable to SQL injection
 router.post("/login", async (req, res) => {
-    const {email, password} = req.body;
+    const {email, password} = req.body || {};
 
     try {
-        const [rows] = await pool.query(
-            "SELECT * FROM users WHERE email = ? AND password = ?",
-            [email, password]
-        );
+        if (email == null || password == null) {
+            return res.status(400).json({
+                message: "Email and password are required (insecure demo).",
+            });
+        }
+
+        const sql =
+            "SELECT * FROM users " +
+            "WHERE email = '" + email + "' " +
+            "AND password = '" + password + "' " +
+            "LIMIT 1";
+
+        console.log("LOGIN SQL:", sql);
+
+        const [rows] = await pool.query(sql);
 
         if (rows.length === 0) {
             return res.status(401).json({message: "Invalid credentials."});
@@ -41,15 +52,18 @@ router.post("/login", async (req, res) => {
 
         const user = rows[0];
 
-        // Insecure: return entire user record (including password)
         res.json({
             message: "Login successful (insecure demo).",
             user,
         });
     } catch (err) {
-        console.error("Login error:", err);
-        res.status(500).json({message: "Error logging in."});
+        console.error("Login error (insecure):", err);
+        res.status(500).json({
+            message: "Error logging in.",
+            error: err.message,
+        });
     }
 });
+
 
 module.exports = router;

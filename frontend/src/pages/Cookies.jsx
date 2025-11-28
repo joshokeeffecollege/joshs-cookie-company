@@ -69,15 +69,13 @@ export default function Cookies() {
                                     />
                                 )}
 
-                                <div className="card-body d-flex flex-column">
-                                    {cookie.tag && (
-                                        <span className="badge bg-warning text-dark mb-2 align-self-start">
-                                            {cookie.tag}
-                                        </span>
-                                    )}
 
+                                <div className="card-body d-flex flex-column">
+
+                                    {/* Title */}
                                     <h2 className="h5 card-title mb-1">{cookie.name}</h2>
 
+                                    {/* Description */}
                                     {cookie.description && (
                                         <p className="card-text text-muted small mb-3">
                                             {cookie.description}
@@ -85,9 +83,12 @@ export default function Cookies() {
                                     )}
 
                                     <div className="mt-auto d-flex justify-content-between align-items-center">
+                                        {/* Price */}
                                         <span className="fw-bold">
                                             €{Number(cookie.price).toFixed(2)}
                                         </span>
+
+                                        {/* Add to cart button */}
                                         <button type="button" className={"btn btn-sm btn-outline-warning"} onClick={() => addToCart(cookie)}>
                                             Add to Cart
                                         </button>
