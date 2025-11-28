@@ -1,23 +1,20 @@
 import {useEffect, useState} from "react";
+import {useCart} from "../components/context/CartContext.jsx";
 import axios from "axios";
 
 export default function Cookies() {
     const [cookies, setCookies] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [search, setSearch] = useState("");
+    const {addToCart} = useCart();
 
     useEffect(() => {
         axios
             .get("http://localhost:5000/api/cookies")
             .then((res) => {
                 setCookies(res.data);
-                setLoading(false);
             })
             .catch((err) => {
                 console.error("Error fetching cookies", err);
-                setError("Unable to load cookies.");
-                setLoading(false);
             });
     }, []);
 
@@ -91,9 +88,9 @@ export default function Cookies() {
                                         <span className="fw-bold">
                                             €{Number(cookie.price).toFixed(2)}
                                         </span>
-                                        <a href="" className="btn btn-sm btn-outline-warning">
-                                            Add to cart
-                                        </a>
+                                        <button type="button" className={"btn btn-sm btn-outline-warning"} onClick={() => addToCart(cookie)}>
+                                            Add to Cart
+                                        </button>
                                     </div>
                                 </div>
                             </div>

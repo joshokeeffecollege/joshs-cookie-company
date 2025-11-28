@@ -1,8 +1,10 @@
 import {useEffect, useState} from "react";
+import {useCart} from "../components/context/CartContext.jsx";
 import axios from "../api/axiosClient.js";
 
 export default function Home() {
     const [cookies, setCookies] = useState([]);
+    const {addToCart} = useCart();
 
     // Fetch cookies from your Express backend
     useEffect(() => {
@@ -96,9 +98,13 @@ export default function Home() {
                                         </p>
                                         <div className="mt-auto d-flex justify-content-between align-items-center">
                                             <span className="fw-bold">€{cookie.price}</span>
-                                            <a href="/cookies" className="btn btn-sm btn-outline-warning">
+                                            <button
+                                                type="button"
+                                                className="btn btn-sm btn-outline-warning"
+                                                onClick={() => addToCart(cookie)}
+                                            >
                                                 Add to cart
-                                            </a>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
