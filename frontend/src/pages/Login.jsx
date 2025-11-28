@@ -24,6 +24,9 @@ export default function Login() {
             setMessage("Login successfull");
             console.log("Login response: ", res.data);
 
+            // save user to localStorage
+            localStorage.setItem("currentUser", JSON.stringify(res.data.user));
+
             // redirect user to account page
             navigate("/account");
         } catch (error) {

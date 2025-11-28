@@ -5,7 +5,6 @@ require('dotenv').config();
 const pool = require('./db');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
-const cookiesRouter = require("./routes/cookies");
 
 const app = express();
 

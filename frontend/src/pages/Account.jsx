@@ -1,4 +1,10 @@
 function Account() {
+
+    // read from local storage
+    const storedUser = localStorage.getItem("currentUser");
+    const user = storedUser ? JSON.parse(storedUser) : null;
+
+    // if a user is not logged in
     if (!user){
         return (
             <div className="py-5">
@@ -9,6 +15,8 @@ function Account() {
                 </div>
             </div>
         );
+
+    // logged in user page
     } else {
         return (
             <div className="py-5">
