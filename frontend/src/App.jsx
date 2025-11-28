@@ -11,6 +11,8 @@ import Users from './pages/Users.jsx';
 import Cookies from './pages/Cookies.jsx';
 import CookieDetail from './pages/CookieDetail.jsx';
 import Cart from './pages/Cart.jsx';
+import Review from './pages/Reviews.jsx';
+import Reviews from "./pages/Reviews.jsx";
 
 function App() {
     return (
@@ -27,6 +29,7 @@ function App() {
                     <Route path="/register" element={<Register/>}/>
                     <Route path="/account" element={<Account/>}/>
                     <Route path="/debug/users" element={<Users/>}/> {/* Insecure debug page */}
+                    <Route path="/reviews" element={<Reviews/>}/>
                 </Routes>
             </main>
 

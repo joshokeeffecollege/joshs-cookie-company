@@ -161,5 +161,14 @@ VALUES ('Classic Chocolate Chip', 2.50, 'Best seller',
        ('Mint Choc Chip', 2.80, 'Fresh',
         'Minty dough with dark chocolate chunks for a refreshing treat.',
         'https://images.unsplash.com/photo-1697961533293-caa219f0b75b?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-
+```
+### 5. Create the reviews table
+```sql
+CREATE TABLE reviews
+(
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    author     VARCHAR(255),
+    content    TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 ```

@@ -5,6 +5,7 @@ require('dotenv').config();
 const pool = require('./db');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
+const reviewsRouter = require('./routes/reviews');
 
 const app = express();
 
@@ -13,8 +14,8 @@ app.use(express.json());
 
 // Insecure users endpoint
 app.use('/api/users', usersRouter);
-
 app.use('/api', authRouter);
+app.use('/api/reviews', reviewsRouter);
 
 app.get('/api/cookies', async (req, res) => {
     try {
