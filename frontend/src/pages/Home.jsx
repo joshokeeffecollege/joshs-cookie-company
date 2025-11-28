@@ -13,7 +13,6 @@ export default function Home() {
             })
             .catch((err) => {
                 console.error("Error fetching cookies", err);
-                setError("Unable to load cookies.");
             });
     }, []);
 
