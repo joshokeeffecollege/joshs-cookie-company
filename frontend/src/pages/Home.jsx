@@ -18,12 +18,34 @@ export default function Home() {
             });
     }, []);
 
+    // Insecure - DOM-based XSS
+    useEffect(() => {
+        try {
+            const raw = window.location.hash || "";
+            const hash = raw.startsWith("#") ? raw.substring(1) : raw;
+
+            // decode url encoded characters
+            let payload;
+            try {
+                payload = decodeURIComponent(hash);
+            } catch {
+                payload = hashed;
+            }
+
+            const banner = document.getElementById("dom-xss-banner");
+            if (banner && payload) {
+                banner.innerHTML = payload;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }, []);
+
     // Show only 3 featured cookies
     const featuredCookies = cookies.slice(0, 3);
 
     return (
         <div>
-
             {/* HERO SECTION */}
             <section className="py-5 px-0 bg-light border-bottom">
                 <div className="container-fluid px-5">
@@ -163,22 +185,15 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* TESTIMONIALS */}
-            {/*<section className="py-5 bg-white">*/}
-            {/*    <div className="container-fluid px-5">*/}
-            {/*        <div className="row justify-content-center">*/}
-            {/*            <div className="col-md-8 text-center">*/}
-            {/*                <h2 className="h4 mb-3">What people are saying</h2>*/}
-            {/*                <p className="fst-italic text-muted mb-1">*/}
-            {/*                    “Best cookies I’ve ever had. This Josh lad is a genius.”*/}
-            {/*                </p>*/}
-            {/*                <p className="fw-semibold mb-0">— Some guy</p>*/}
-            {/*            </div>*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*</section>*/}
-
-
+            {/* Insecure - DOM-based XSS */}
+            <section className={"py-2 bg-light"}>
+                <div className={"container-fluid px-5"}>
+                    <div id={"dom-xss-banner"} className={"alert alert-warning mb-0"}>
+                        {/* This text will be replaced insecurely by client side js */}
+                        DOM-based XSS
+                    </div>
+                </div>
+            </section>
         </div>
     );
 }
