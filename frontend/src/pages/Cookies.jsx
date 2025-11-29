@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {useCart} from "../components/context/CartContext.jsx";
 import axios from "axios";
+import * as url from "node:url";
 
 export default function Cookies() {
     const [cookies, setCookies] = useState([]);
@@ -18,6 +19,13 @@ export default function Cookies() {
             });
     }, []);
 
+    // Insecure - Use search queries from url (XSS susceptible)
+    const [urlSearch] = useState(() => {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("q") || "";
+    });
+
+    // search by filtering cookies
     const filteredCookies = cookies.filter((cookie) => {
         const term = search.toLowerCase();
         return (
@@ -40,6 +48,15 @@ export default function Cookies() {
                             Freshly baked, carefully packed, and dangerously moreish.
                         </p>
                     </div>
+
+                    {/* INSECURE - reflected XSS using ?q= url param */}
+                    {urlSearch && (
+                        <div className={"alert alert-info mb-4"}
+                             dangerouslySetInnerHTML={{__html: `Showing results for: ${urlSearch}`}}>
+
+                        </div>
+                    )
+                    }
 
                     <div className="d-flex align-items-center gap-2">
                         <input
@@ -89,7 +106,8 @@ export default function Cookies() {
                                         </span>
 
                                         {/* Add to cart button */}
-                                        <button type="button" className={"btn btn-sm btn-outline-warning"} onClick={() => addToCart(cookie)}>
+                                        <button type="button" className={"btn btn-sm btn-outline-warning"}
+                                                onClick={() => addToCart(cookie)}>
                                             Add to Cart
                                         </button>
                                     </div>

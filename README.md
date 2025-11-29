@@ -1,5 +1,4 @@
-# Josh's Cookie Company
-# 🛠 **Installation & Setup**
+# **Installation & Setup**
 
 ### **1. Clone the Repository**
 
@@ -10,7 +9,7 @@ cd secure-app-project
 
 ---
 
-## 🔧 **Backend Setup**
+## **Backend Setup**
 
 ### 1. Install Dependencies
 
@@ -172,3 +171,5 @@ CREATE TABLE reviews
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
+
+## **Known Vulnerabilities**

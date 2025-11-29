@@ -3,8 +3,8 @@ import axios from "axios";
 
 export default function Reviews() {
     const [reviews, setReviews] = useState([]);
-    const [author, setAuthor] = useState(null);
-    const [content, setContent] = useState(null);
+    const [author, setAuthor] = useState("");
+    const [content, setContent] = useState("");
 
     useEffect(() => {
         axios
