@@ -1,14 +1,4 @@
 # **Installation & Setup**
-
-### **1. Clone the Repository**
-
-```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
-cd secure-app-project
-```
-
----
-
 ## **Backend Setup**
 
 ### 1. Install Dependencies
@@ -38,14 +28,6 @@ The backend runs on:
 
 ```
 http://localhost:5000
-```
-
-Test the API:
-
-```
-http://localhost:5000/api/health
-http://localhost:5000/api/cookies
-http://localhost:5000/api/users
 ```
 
 ---
@@ -78,35 +60,58 @@ http://localhost:5173
 ### 1. Create the MySQL database
 
 ```sql
-CREATE DATABASE josh_cookie_company;
-USE josh_cookie_company;
+-- Create separate DB for secure version
+CREATE DATABASE joshs_cookie_company_secure
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE joshs_cookie_company_secure;
 ```
 
 ### 2. Create `users` table
 
 ```sql
-CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  email VARCHAR(255),
-  password VARCHAR(255),
-  name VARCHAR(255),
-  role VARCHAR(50),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE users
+(
+    id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    email         VARCHAR(255)               NOT NULL,
+    -- no more plaintext passwords
+    password_hash VARCHAR(255)               NOT NULL,
+    name          VARCHAR(255)               NOT NULL,
+    role          ENUM ('customer', 'admin') NOT NULL DEFAULT 'customer',
+
+    -- Brute-force / lockout support
+    failed_logins INT UNSIGNED               NOT NULL DEFAULT 0,
+    lock_until    DATETIME                   NULL,
+
+    -- timestamps for auditability
+    created_at    TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TIMESTAMP                  NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    -- prevent duplicate accounts with same email
+    CONSTRAINT uq_users_email UNIQUE (email)
 );
 ```
 
 ### 3. Create `cookies` table
 
 ```sql
-CREATE TABLE cookies (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255),
-  price DECIMAL(5,2),
-  tag VARCHAR(100),
-  description TEXT,
-  image_url VARCHAR(255),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE cookies
+(
+    id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(255)  NOT NULL,
+    price       DECIMAL(7, 2) NOT NULL CHECK (price >= 0),
+    tag         VARCHAR(100) NULL,
+    description TEXT NULL,
+    image_url   VARCHAR(255) NULL,
+
+    created_at  TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+CREATE INDEX idx_cookies_tag ON cookies (tag);
+CREATE INDEX idx_cookies_name ON cookies (name);
 ```
 
 ### 4. Insert cookie data
@@ -165,11 +170,48 @@ VALUES ('Classic Chocolate Chip', 2.50, 'Best seller',
 ```sql
 CREATE TABLE reviews
 (
-    id         INT AUTO_INCREMENT PRIMARY KEY,
-    author     VARCHAR(255),
-    content    TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+
+    -- link to registered user; null for anonymous reviews
+    user_id    INT UNSIGNED NULL,
+    author     VARCHAR(255) NULL,
+    content    TEXT      NOT NULL,
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_reviews_user
+        FOREIGN KEY (user_id) REFERENCES users (id)
+            ON DELETE SET NULL
+            ON UPDATE CASCADE
 );
+
+CREATE INDEX idx_reviews_user_id ON reviews (user_id);
+CREATE INDEX idx_reviews_created_at ON reviews (created_at);
+```
+
+### 6. Security Logs
+```sql
+CREATE TABLE security_logs
+(
+    id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id    INT UNSIGNED NULL,
+    -- log events such as: logins success/fail, admin views users etc
+    event_type VARCHAR(50) NOT NULL,
+    ip_address VARCHAR(45) NULL,
+    user_agent VARCHAR(255) NULL,
+    details    VARCHAR(255) NULL,
+
+    created_at TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_security_logs_user
+        FOREIGN KEY (user_id) REFERENCES users (id)
+            ON DELETE SET NULL
+            ON UPDATE CASCADE
+);
+
+CREATE INDEX idx_security_logs_user_id ON security_logs (user_id);
+CREATE INDEX idx_security_logs_event_type ON security_logs (event_type);
+CREATE INDEX idx_security_logs_created_at ON security_logs (created_at);
 ```
 
 ## **Known Vulnerabilities**
