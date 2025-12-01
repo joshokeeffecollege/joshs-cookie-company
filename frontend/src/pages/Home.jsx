@@ -9,36 +9,13 @@ export default function Home() {
     // Fetch cookies from your Express backend
     useEffect(() => {
         axios
-            .get("http://localhost:5000/api/cookies")
+            .get("/cookies")
             .then((res) => {
                 setCookies(res.data);
             })
             .catch((err) => {
                 console.error("Error fetching cookies", err);
             });
-    }, []);
-
-    // Insecure - DOM-based XSS
-    useEffect(() => {
-        try {
-            const raw = window.location.hash || "";
-            const hash = raw.startsWith("#") ? raw.substring(1) : raw;
-
-            // decode url encoded characters
-            let payload;
-            try {
-                payload = decodeURIComponent(hash);
-            } catch {
-                payload = hashed;
-            }
-
-            const banner = document.getElementById("dom-xss-banner");
-            if (banner && payload) {
-                banner.innerHTML = payload;
-            }
-        } catch (error) {
-            console.error(error);
-        }
     }, []);
 
     // Show only 3 featured cookies
@@ -181,16 +158,6 @@ export default function Home() {
                                 Perfect for study sessions and late-night debugging.
                             </p>
                         </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Insecure - DOM-based XSS */}
-            <section className={"py-2 bg-light"}>
-                <div className={"container-fluid px-5"}>
-                    <div id={"dom-xss-banner"} className={"alert alert-warning mb-0"}>
-                        {/* This text will be replaced insecurely by client side js */}
-                        DOM-based XSS
                     </div>
                 </div>
             </section>

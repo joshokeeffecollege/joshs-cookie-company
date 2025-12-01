@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import {useCart} from "../components/context/CartContext.jsx";
-import axios from "axios";
-import * as url from "node:url";
+import axiosClient from "../api/axiosClient.js";
 
 export default function Cookies() {
     const [cookies, setCookies] = useState([]);
@@ -9,8 +8,8 @@ export default function Cookies() {
     const {addToCart} = useCart();
 
     useEffect(() => {
-        axios
-            .get("http://localhost:5000/api/cookies")
+        axiosClient
+            .get("/cookies")
             .then((res) => {
                 setCookies(res.data);
             })
@@ -18,12 +17,6 @@ export default function Cookies() {
                 console.error("Error fetching cookies", err);
             });
     }, []);
-
-    // Insecure - Use search queries from url (XSS susceptible)
-    const [urlSearch] = useState(() => {
-        const params = new URLSearchParams(window.location.search);
-        return params.get("q") || "";
-    });
 
     // search by filtering cookies
     const filteredCookies = cookies.filter((cookie) => {
@@ -48,15 +41,6 @@ export default function Cookies() {
                             Freshly baked, carefully packed, and dangerously moreish.
                         </p>
                     </div>
-
-                    {/* INSECURE - reflected XSS using ?q= url param */}
-                    {urlSearch && (
-                        <div className={"alert alert-info mb-4"}
-                             dangerouslySetInnerHTML={{__html: `Showing results for: ${urlSearch}`}}>
-
-                        </div>
-                    )
-                    }
 
                     <div className="d-flex align-items-center gap-2">
                         <input

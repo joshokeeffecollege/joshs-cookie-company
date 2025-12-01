@@ -9,7 +9,7 @@ const pool = require('./db');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 const reviewsRouter = require('./routes/reviews');
-const {createAdmin} = require("./admin");
+const { createAdmin } = require("./admin");
 
 const app = express();
 
@@ -32,17 +32,21 @@ app.use(session({
 }));
 
 app.use(express.json());
+app.use(helmet());
+
+// Routers
 app.use('/api/users', usersRouter);
 app.use('/api', authRouter);
 app.use('/api/reviews', reviewsRouter);
-app.use(helmet());
 
+// get cookie data
 app.get('/api/cookies', async (req, res) => {
     try {
         const [rows] = await pool.query("SELECT * FROM cookies");
         res.json(rows);
     } catch (error) {
         console.log(error);
+        res.status(500).json({ message: 'Error fetching cookies' });
     }
 });
 
@@ -50,10 +54,10 @@ app.get("/api/me", (req, res) => {
     if (!req.session.user) {
         return res.status(401).send("Not authorized");
     }
-    return res.json({user: req.session.user});
-})
+    return res.json({ user: req.session.user });
+});
 
-// When the sever starts, an admin is automatically created, if one doesn't exist
+// when the sever starts, an admin is automatically created, if one doesn't exist
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, async () => {
     await createAdmin();
