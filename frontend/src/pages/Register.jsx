@@ -1,5 +1,5 @@
 import {useState} from "react";
-import axios from "axios";
+import axiosClient from "../api/axiosClient.js";
 import {useNavigate} from "react-router-dom";
 
 export default function Register() {
@@ -16,28 +16,27 @@ export default function Register() {
         e.preventDefault();
         setError(null);
         setMessage(null);
+
+        if (password.length < 10) {
+            setError("Password must be at least 10 characters long.");
+            return;
+        }
+
         setLoading(true);
 
         try {
-            const res = await axios.post("http://localhost:5000/api/register", {
+            await axiosClient.post("/register", {
                 name,
                 email,
                 password,
-                role: "customer"
             });
 
-            setMessage("Registration successful (insecure demo). You can now log in.");
-            console.log("Register response:", res.data);
-
-            setName("");
-            setEmail("");
-            setPassword("");
-
-            // redirect user to login page
+            setMessage("Registration successful. You can now log in.");
             navigate("/login");
         } catch (err) {
             console.error("Register error:", err);
-            setError(err.response?.data?.message || "Registration failed.");
+            const apiMessage = err.response?.data?.message;
+            setError(apiMessage || "Registration failed.");
         } finally {
             setLoading(false);
         }
@@ -53,8 +52,13 @@ export default function Register() {
                             Save your details and make ordering cookies even easier.
                         </p>
 
-                        <form onSubmit={handleSubmit} noValidate>
+                        {message && (
+                            <div className="alert alert-info text-center" role="alert">
+                                {message}
+                            </div>
+                        )}
 
+                        <form onSubmit={handleSubmit} noValidate>
                             <div className="mb-3">
                                 <label htmlFor="name" className="form-label">
                                     Full name
@@ -95,6 +99,9 @@ export default function Register() {
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
                                 />
+                                <div className="form-text">
+                                    Must be at least 10 characters.
+                                </div>
                             </div>
 
                             <button
@@ -104,7 +111,6 @@ export default function Register() {
                             >
                                 {loading ? "Creating account..." : "Register"}
                             </button>
-
                         </form>
 
                         <p className="text-center text-muted mt-3 mb-0">

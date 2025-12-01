@@ -24,9 +24,29 @@ export default function Login() {
                     password,
                 }
             );
+            setMessage(null);
             navigate("/account");
         } catch (error) {
             console.log("Login error: " + error);
+            const status = error.response?.status;
+            const apiMessage = error.response?.data?.message;
+
+            if (status === 403) {
+                setMessage(
+                    apiMessage ||
+                    "Your account is temporarily locked due to too many failed login attempts. Please try again later."
+                );
+            } else if (status === 401) {
+                setMessage(
+                    apiMessage ||
+                    "Invalid credentials"
+                );
+            } else {
+                setMessage(
+                    apiMessage ||
+                    "Login failed. Please try again"
+                );
+            }
         } finally {
             setLoading(false);
         }
@@ -42,25 +62,48 @@ export default function Login() {
                             Sign in to manage your orders and account.
                         </p>
 
+                        {
+                            message && (
+                                <div className={"alert alert-info text-center"}>
+                                    {message}
+                                </div>
+                            )
+                        }
+
                         <form onSubmit={handleSubmit} noValidate>
                             <div className="mb-3">
                                 <label htmlFor="email" className="form-label">
                                     Email address
                                 </label>
-                                <input type="email" id="email" className="form-control" value={email}
-                                       placeholder="Enter email" onChange={(e) => setEmail(e.target.value)} required/>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    className="form-control"
+                                    value={email}
+                                    placeholder="Enter email"
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required/>
                             </div>
 
                             <div className="mb-3">
                                 <label htmlFor="password" className="form-label">
                                     Password
                                 </label>
-                                <input type="password" id="password" className="form-control" value={password}
-                                       onChange={(e) => setPassword(e.target.value)} required/>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    className="form-control"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required/>
                             </div>
 
-                            <button type="submit" className="btn btn-outline-warning w100 mt-3 mx-auto">
-                                Login
+                            <button
+                                type="submit"
+                                className="btn btn-outline-warning w100 mt-3 mx-auto"
+                                disabled={loading}
+                            >
+                                {loading ? "Logging in..." : "Login"}
                             </button>
                         </form>
 
