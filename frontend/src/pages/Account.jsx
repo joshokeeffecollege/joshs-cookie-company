@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import axios from "../api/axiosClient.js";
 import {useNavigate} from "react-router-dom";
+import axiosClient from "../api/axiosClient.js";
 
 function Account() {
     const [user, setUser] = useState(null);
@@ -11,7 +12,7 @@ function Account() {
     useEffect(() => {
         let isMounted = true;
 
-        axios
+        axiosClient
             .get("/me")
             .then(res => {
                 setUser(res.data.user);

@@ -52,6 +52,12 @@ export default function Register() {
                             Save your details and make ordering cookies even easier.
                         </p>
 
+                        {error && (
+                            <div className={"alert alert-danger text-center"}>
+                                {error}
+                            </div>
+                        )}
+
                         {message && (
                             <div className="alert alert-info text-center" role="alert">
                                 {message}
