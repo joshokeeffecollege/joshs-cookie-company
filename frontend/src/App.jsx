@@ -7,10 +7,9 @@ import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import Account from './pages/Account.jsx';
-import Users from './pages/Users.jsx';
 import Cookies from './pages/Cookies.jsx';
 import Cart from './pages/Cart.jsx';
-import Review from './pages/Reviews.jsx';
+import Admin from './pages/Admin.jsx';
 import Reviews from "./pages/Reviews.jsx";
 
 function App() {
@@ -27,6 +26,9 @@ function App() {
                     <Route path="/register" element={<Register/>}/>
                     <Route path="/account" element={<Account/>}/>
                     <Route path="/reviews" element={<Reviews/>}/>
+
+                    {/* admin dashboard */}
+                    <Route path="/admin" element={<Admin />} />
                 </Routes>
             </main>
 
