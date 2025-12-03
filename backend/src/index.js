@@ -14,30 +14,52 @@ const {createAdmin} = require("./createAdmin");
 const app = express();
 
 // CSP and security headers
-app.use((req, res, next) => {
-    // content security policy
-    res.setHeader(
-        "Content-Security-Policy",
-        [
-            "default-src 'self';",
-            "script-src 'self';",
-            "style-src 'self' 'unsafe-inline';",
-            "img-src 'self' data:;",
-            "object-src 'none';",
-            "base-uri 'self';",
-            "form-action 'self';",
-            "frame-ancestors 'none';"
-        ].join(" ")
-    );
+// app.use((req, res, next) => {
+//     // content security policy
+//     res.setHeader(
+//         "Content-Security-Policy",
+//         [
+//             "default-src 'self';",
+//             "script-src 'self';",
+//             "style-src 'self' 'unsafe-inline';",
+//             "img-src 'self' data:;",
+//             "object-src 'none';",
+//             "base-uri 'self';",
+//             "form-action 'self';",
+//             "frame-ancestors 'none';"
+//         ].join(" ")
+//     );
+//
+//     // Anti-clickjacking
+//     res.setHeader("X-Frame-Options", "DENY");
+//
+//     // MIME type sniffing protection
+//     res.setHeader("X-Content-Type-Options", "nosniff");
+//
+//     next();
+// })
 
-    // Anti-clickjacking
-    res.setHeader("X-Frame-Options", "DENY");
+if (process.env.NODE_ENV === "production") {
+    app.use((req, res, next) => {
+        res.setHeader(
+            "Content-Security-Policy",
+            [
+                "default-src 'self';",
+                "script-src 'self';",
+                "style-src 'self' 'unsafe-inline';",
+                "img-src 'self' data:;",
+                "object-src 'none';",
+                "base-uri 'self';",
+                "form-action 'self';",
+                "frame-ancestors 'none';"
+            ].join(" ")
+        );
+        res.setHeader("X-Frame-Options", "DENY");
+        res.setHeader("X-Content-Type-Options", "nosniff");
+        next();
+    });
+}
 
-    // MIME type sniffing protection
-    res.setHeader("X-Content-Type-Options", "nosniff");
-
-    next();
-})
 
 app.use(cors({
     origin: "http://localhost:5173",
