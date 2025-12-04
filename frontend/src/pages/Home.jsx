@@ -25,7 +25,7 @@ export default function Home() {
             const hash = raw.startsWith("#") ? raw.substring(1) : raw;
 
             // decode url encoded characters
-            let payload;
+            let payload = "";
             try {
                 payload = decodeURIComponent(hash);
             } catch {
