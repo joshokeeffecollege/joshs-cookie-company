@@ -1,14 +1,4 @@
 # **Installation & Setup**
-
-### **1. Clone the Repository**
-
-```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
-cd secure-app-project
-```
-
----
-
 ## **Backend Setup**
 
 ### 1. Install Dependencies
@@ -171,5 +161,3 @@ CREATE TABLE reviews
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
-
-## **Known Vulnerabilities**
