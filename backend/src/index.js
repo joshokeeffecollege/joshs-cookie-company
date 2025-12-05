@@ -1,23 +1,91 @@
-const express = require('express');
-const cors = require('cors');
 require('dotenv').config();
 
+const express = require('express');
+const cors = require('cors');
+const session = require('express-session');
+const helmet = require("helmet");
+
 const pool = require('./db');
-const usersRouter = require('./routes/users'); // import routes
+const adminRouter = require('./routes/admin');
+const authRouter = require('./routes/auth');
+const reviewsRouter = require('./routes/reviews');
+const {createAdmin} = require("./createAdmin");
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
+// CSP and security headers
+app.use((req, res, next) => {
+    // content security policy
+    res.setHeader(
+        "Content-Security-Policy",
+        [
+            "default-src 'self';",
+            "script-src 'self';",
+            "style-src 'self' 'unsafe-inline';",
+            "img-src 'self' data:;",
+            "object-src 'none';",
+            "base-uri 'self';",
+            "form-action 'self';",
+            "frame-ancestors 'none';"
+        ].join(" ")
+    );
 
-app.get('/api/health', (req, res) => {
-    res.json({status: 'ok', message: "Josh's Cookie Company API running"});
+    // Anti-clickjacking
+    res.setHeader("X-Frame-Options", "DENY");
+
+    // MIME type sniffing protection
+    res.setHeader("X-Content-Type-Options", "nosniff");
+
+    next();
+})
+
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
+
+app.use(session({
+    name: "cookie_app_sid",
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: false, // true when using https
+        maxAge: 1000 * 60 * 60, // 1 hour
+    },
+}));
+
+app.use(express.json());
+app.use(helmet());
+
+// Routers
+app.use('/api/admin', adminRouter);
+app.use('/api', authRouter);
+app.use('/api/reviews', reviewsRouter);
+
+// get cookie data
+app.get('/api/cookies', async (req, res) => {
+    try {
+        const [rows] = await pool.query("SELECT * FROM cookies");
+        res.json(rows);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({message: 'Error fetching cookies'});
+    }
 });
 
-// mount /api/users
-app.use('/api/users', usersRouter);
+app.get("/api/me", (req, res) => {
+    if (!req.session.user) {
+        return res.status(401).send("Not authorized");
+    }
+    return res.json({user: req.session.user});
+});
 
+// when the server starts, an admin is automatically created, if one doesn't exist
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    await createAdmin();
     console.log(`Backend API listening on http://localhost:${PORT}`);
 });

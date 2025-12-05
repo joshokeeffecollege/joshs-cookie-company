@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const axiosClient = axios.create({
-    baseURL: '/api', // goes to http://localhost:5000 via Vite proxy
+    baseURL: 'http://localhost:5000/api',
+    withCredentials: true
 });
 
 export default axiosClient;
