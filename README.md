@@ -1,60 +1,3 @@
-# **Installation & Setup**
-## **Backend Setup**
-
-### 1. Install Dependencies
-
-```bash
-cd backend
-npm install
-```
-
-### 2. Create `.env` file (ignored in Git)
-
-```
-PORT=5000
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=yourpassword
-DB_NAME=josh_cookie_company_secure
-```
-
-### 3. Start the Backend
-
-```bash
-npm run dev
-```
-
-The backend runs on:
-
-```
-http://localhost:5000
-```
-
----
-
-## 🎨 **Frontend Setup**
-
-### 1. Install Dependencies
-
-```bash
-cd frontend
-npm install
-```
-
-### 2. Start Vite
-
-```bash
-npm run dev
-```
-
-Frontend runs on:
-
-```
-http://localhost:5173
-```
-
----
-
 # **Database Setup**
 
 ### 1. Create the MySQL database
@@ -214,4 +157,63 @@ CREATE INDEX idx_security_logs_event_type ON security_logs (event_type);
 CREATE INDEX idx_security_logs_created_at ON security_logs (created_at);
 ```
 
-## **Known Vulnerabilities**
+## **Backend Setup**
+
+### 1. Install Dependencies
+
+```bash
+cd backend
+npm install
+```
+
+### 2. Create `.env` file (ignored in Git)
+
+```
+PORT=5000
+DB_HOST=localhost
+DB_USER=user
+DB_PASSWORD=yourdbpassword
+DB_NAME=joshs_cookie_company_secure
+SESSION_SECRET=f1c39a8e5b4c79c31e5df95a447f67e4c0a15ebcc3e91d6fdc6a3421d85b3a11
+ADMIN_EMAIL=admin@cookies.com
+ADMIN_PASSWORD=StrongPassword!
+ADMIN_NAME=Admin
+```
+
+### 3. Start the Backend
+
+```bash
+npm run dev
+```
+
+The backend runs on:
+
+```
+http://localhost:5000
+```
+
+---
+
+## 🎨 **Frontend Setup**
+
+### 1. Install Dependencies
+
+```bash
+cd frontend
+npm install
+```
+
+### 2. Start Vite
+
+```bash
+npm run dev
+```
+
+Frontend runs on:
+
+```
+http://localhost:5173
+```
+
+---
+
