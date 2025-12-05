@@ -15,7 +15,7 @@ PORT=5000
 DB_HOST=localhost
 DB_USER=root
 DB_PASSWORD=yourpassword
-DB_NAME=josh_cookie_company
+DB_NAME=josh_cookie_company_secure
 ```
 
 ### 3. Start the Backend
